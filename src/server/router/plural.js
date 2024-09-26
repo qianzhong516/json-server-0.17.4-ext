@@ -84,7 +84,8 @@ module.exports = (db, name, opts) => {
           /_lte$/.test(query) ||
           /_gte$/.test(query) ||
           /_ne$/.test(query) ||
-          /_like$/.test(query)
+          /_like$/.test(query) ||
+          /_has$/.test(query)
         )
           return
       }
@@ -120,7 +121,18 @@ module.exports = (db, name, opts) => {
         const isDifferent = /_ne$/.test(key)
         const isRange = /_lte$/.test(key) || /_gte$/.test(key)
         const isLike = /_like$/.test(key)
-        const path = key.replace(/(_lte|_gte|_ne|_like)$/, '')
+        const has = /_has$/.test(key)
+        const path = key.replace(/(_lte|_gte|_ne|_like|_has)$/, '')
+        let map
+
+        if (has) {
+          const val = req.query[key]
+          if (val && _.isArray(val)) {
+            map = { [path]: val }
+          } else {
+            map = { [path]: [val] }
+          }
+        }
 
         chain = chain.filter((element) => {
           return arr
@@ -144,6 +156,12 @@ module.exports = (db, name, opts) => {
                 return value !== elementValue.toString()
               } else if (isLike) {
                 return new RegExp(value, 'i').test(elementValue.toString())
+              } else if (has) {
+                return map[path].every(
+                  (value) =>
+                    elementValue.includes(value) ||
+                    elementValue.some((e) => e.id === value)
+                )
               } else {
                 return value === elementValue.toString()
               }
@@ -165,7 +183,7 @@ module.exports = (db, name, opts) => {
       res.setHeader('X-Total-Count', chain.size())
       res.setHeader(
         'Access-Control-Expose-Headers',
-        `X-Total-Count${_page ? ', Link' : ''}`,
+        `X-Total-Count${_page ? ', Link' : ''}`
       )
     }
 
@@ -180,28 +198,28 @@ module.exports = (db, name, opts) => {
       if (page.first) {
         links.first = fullURL.replace(
           `page=${page.current}`,
-          `page=${page.first}`,
+          `page=${page.first}`
         )
       }
 
       if (page.prev) {
         links.prev = fullURL.replace(
           `page=${page.current}`,
-          `page=${page.prev}`,
+          `page=${page.prev}`
         )
       }
 
       if (page.next) {
         links.next = fullURL.replace(
           `page=${page.current}`,
-          `page=${page.next}`,
+          `page=${page.next}`
         )
       }
 
       if (page.last) {
         links.last = fullURL.replace(
           `page=${page.current}`,
-          `page=${page.last}`,
+          `page=${page.last}`
         )
       }
 
