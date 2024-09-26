@@ -1,7 +1,7 @@
 {
-  "name": "json-server",
-  "version": "0.17.4",
-  "description": "Get a full fake REST API with zero coding in less than 30 seconds",
+  "name": "@qianzhong516/json-server-extended",
+  "version": "0.0.1",
+  "description": "This is an unofficial version of json-server for personal usage. Do not download this. Please refer to https://github.com/typicode/json-server instead.",
   "main": "./lib/server/index.js",
   "bin": "./lib/cli/bin.js",
   "files": [
@@ -69,7 +69,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/typicode/json-server.git"
+    "url": "git://github.com/qianzhong516/json-server-0.17.4-ext.git"
   },
   "keywords": [
     "JSON",
@@ -87,12 +87,8 @@
     "dummy",
     "sandbox"
   ],
-  "author": "Typicode <typicode@gmail.com>",
+  "author": "Janice",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/typicode/json-server/issues"
-  },
-  "homepage": "https://github.com/typicode/json-server",
   "engines": {
     "node": ">=12"
   },
